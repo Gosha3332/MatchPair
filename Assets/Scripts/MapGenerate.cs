@@ -31,11 +31,12 @@ namespace MapGenerate
             Cells = new GameObject[mapWH, mapWH];
 
             GameObject cell = new GameObject();
+            GameObject child = Object.Instantiate(cell, cell.transform);
+
             cell.AddComponent<SpriteRenderer>();
             cell.GetComponent<SpriteRenderer>().sprite = material;
-            cell.transform.localScale = new Vector3(1.5f, 1.5f);
+            cell.transform.localScale = new Vector3(1.7f, 1.7f);
 
-            GameObject child = Object.Instantiate(new GameObject(), cell.transform);
             child.AddComponent<TextMeshPro>();
             TextMeshPro childText = child.GetComponent<TextMeshPro>();
             childText.fontSize = 4;
@@ -45,30 +46,53 @@ namespace MapGenerate
             childText.verticalAlignment = VerticalAlignmentOptions.Middle;
 
 
+
             for (int i = 0; i < Cells.GetLength(0); i++)
             {
                 for (int j = 0; j < Cells.GetLength(1); j++)
                 {
-                    Cells[i, j] = Object.Instantiate(cell,new Vector3( i - 1.2f, j - 1.2f), new Quaternion(0, 0, 0, 0), parent.transform);
-                    if (((Cells[i, j].transform.GetChild(0).GetComponent<TextMeshPro>().text != "" && Cells[i + 1, j].transform.GetChild(0).GetComponent<TextMeshPro>().text != "") || (Cells[i, j].transform.GetChild(0).GetComponent<TextMeshPro>().text != "" && Cells[i, j + 1].transform.GetChild(0).GetComponent<TextMeshPro>().text != "")))
+                    Cells[i, j] = Object.Instantiate(cell, new Vector3(i - 1.2f, j - 1.2f), new Quaternion(0, 0, 0, 0), parent.transform);
+                }
+            }
+            Object.Destroy(child);
+            Object.Destroy(cell);
+            for (int i = 0; i < Cells.GetLength(0); i++)
+            {
+                for (int j = 0; j < Cells.GetLength(1); j++)
+                {
+                    int VerticalOrHorizontal = Random.Range(0, 5);
+                    if (VerticalOrHorizontal < 3)
                     {
-                        int h = Random.Range(0, 1);
-                        if (h == 0)
+                        if ((Cells[i, j].transform.GetChild(0).GetComponent<TextMeshPro>().text == "" && Cells[i + 1, j].transform.GetChild(0).GetComponent<TextMeshPro>().text == "") && (i <= Cells.GetLength(0) - 2))
                         {
-                            int k = Random.Range(0, 8);
-                            Cells[i, j].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[1, k]}";
-                            Cells[i + 1, j].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[2, k]}";
+                            int pairs = Random.Range(0, 8);
+                            Cells[i, j].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[pairs, 0]}";
+                            Cells[i + 1, j].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[pairs, 1]}";
                         }
-                        else
+                        else if (j <= Cells.GetLength(1) - 2)
                         {
-                            int k = Random.Range(0, 8);
-                            Cells[i, j].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[k, 1]}";
-                            Cells[i, j + 1].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[k, 2]}";
+                            int pairs = Random.Range(0, 8);
+                            Cells[i, j].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[pairs, 0]}";
+                            Cells[i, j + 1].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[pairs, 1]}";
+                        }
+                    }
+                    else
+                    {
+                        if ((Cells[i, j].transform.GetChild(0).GetComponent<TextMeshPro>().text == "" && Cells[i, j + 1].transform.GetChild(0).GetComponent<TextMeshPro>().text == "") && (j <= Cells.GetLength(1) - 2))
+                        {
+                            int pairs = Random.Range(0, 8);
+                            Cells[i, j].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[pairs, 0]}";
+                            Cells[i, j + 1].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[pairs, 1]}";
+                        }
+                        else if (i <= Cells.GetLength(0) - 2)
+                        {
+                            int pairs = Random.Range(0, 8);
+                            Cells[i, j].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[pairs, 0]}";
+                            Cells[i + 1, j].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[pairs, 1]}";
                         }
                     }
                 }
             }
-            Object.Destroy(cell);
         }
     }
 }
