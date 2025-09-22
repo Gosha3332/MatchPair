@@ -96,24 +96,27 @@ namespace MapGenerate
             }
         }
 
+        private int?[,] Cash = new int?[2, 2];
         public void TachCell()
         {
-            private int?[,] Cash = new int?[2];
-            for (int i = 0; i<Cells.GetLenght(0); i++)
+            for (int i = 0; i < Cells.GetLength(0); i++)
             {
-                for (int j = 0; j<Cells.GetLenght(1); j++)
+                for (int j = 0; j < Cells.GetLength(1); j++)
                 {
                     if (Cells[i, j].transform.GetComponent<TachControler>().isTach == true)
                     {
-                        if (Cash[0, 0] != null && Cash[0, 1] != null) {
+                        if (Cash[0, 0] != null && Cash[0, 1] != null)
+                        {
                             Cash[0, 0] = i;
-                            Cash[0, 1] = j; 
+                            Cash[0, 1] = j;
                         }
-                        else {
-                        
+                        else
+                        {
+                            Cash[1, 0] = i;
+                            Cash[1, 1] = j;
                         }
                     }
-                } 
+                }
             }
         }
     }
