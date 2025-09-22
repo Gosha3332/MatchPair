@@ -36,7 +36,8 @@ namespace MapGenerate
             cell.AddComponent<SpriteRenderer>();
             cell.GetComponent<SpriteRenderer>().sprite = material;
             cell.transform.localScale = new Vector3(1.7f, 1.7f);
-
+            cell.AddComponent<BoxCollider2D>();
+            cell.AddComponent<TachControler>();
             child.AddComponent<TextMeshPro>();
             TextMeshPro childText = child.GetComponent<TextMeshPro>();
             childText.fontSize = 4;
@@ -72,7 +73,7 @@ namespace MapGenerate
                             Cells[i, j].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[pairs, 0]}";
                             Cells[i + 1, j].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[pairs, 1]}";
                         }
-                        else if (j + 1 < Cells.GetLength(1) && (Cells[i, j+ 1].transform.GetChild(0).GetComponent<TextMeshPro>().text == ""))
+                        else if (j + 1 < Cells.GetLength(1) && (Cells[i, j + 1].transform.GetChild(0).GetComponent<TextMeshPro>().text == ""))
                         {
                             Cells[i, j].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[pairs, 0]}";
                             Cells[i, j + 1].transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{pair[pairs, 1]}";
@@ -92,6 +93,27 @@ namespace MapGenerate
                         }
                     }
                 }
+            }
+        }
+
+        public void TachCell()
+        {
+            private int?[,] Cash = new int?[2];
+            for (int i = 0; i<Cells.GetLenght(0); i++)
+            {
+                for (int j = 0; j<Cells.GetLenght(1); j++)
+                {
+                    if (Cells[i, j].transform.GetComponent<TachControler>().isTach == true)
+                    {
+                        if (Cash[0, 0] != null && Cash[0, 1] != null) {
+                            Cash[0, 0] = i;
+                            Cash[0, 1] = j; 
+                        }
+                        else {
+                        
+                        }
+                    }
+                } 
             }
         }
     }
