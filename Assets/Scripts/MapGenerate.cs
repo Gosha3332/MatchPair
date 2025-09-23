@@ -1,5 +1,8 @@
+using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using static MapGenerate.Generate;
 
 namespace MapGenerate
 {
@@ -12,6 +15,7 @@ namespace MapGenerate
             gObject = gameObject;
             Generate gener = new Generate(WH, mat, gObject);
             gener.GenerateMap();
+            StartCoroutine(gener.TachCell());
         }
     }
 
@@ -21,11 +25,17 @@ namespace MapGenerate
         private Sprite material;
         private GameObject parent;
 
-        public GameObject[,] Cells;
+        private GameObject[,] Cells;
         private int[,] pair = new int[,] { { 1, 9 }, { 2, 8 }, { 3, 7 }, { 4, 6 }, { 5, 5 }, { 6, 4 }, { 7, 3 }, { 8, 2 }, { 9, 1 } };
 
-        public Generate(int mapWH, Sprite material, GameObject parent) { this.mapWH = mapWH; this.material = material; this.parent = parent; }
+        private int SelectCellCout;
 
+        public Generate(int mapWH, Sprite material, GameObject parent)
+        {
+            this.mapWH = mapWH;
+            this.material = material;
+            this.parent = parent;
+        }
         public void GenerateMap()
         {
             Cells = new GameObject[mapWH, mapWH];
@@ -97,26 +107,59 @@ namespace MapGenerate
         }
 
         private int?[,] Cash = new int?[2, 2];
-        public void TachCell()
+        public IEnumerator TachCell()
         {
-            for (int i = 0; i < Cells.GetLength(0); i++)
+            while (true)
             {
-                for (int j = 0; j < Cells.GetLength(1); j++)
+                for (int i = 0; i < Cells.GetLength(0); i++)
                 {
-                    if (Cells[i, j].transform.GetComponent<TachControler>().isTach == true)
+                    for (int j = 0; j < Cells.GetLength(1); j++)
                     {
-                        if (Cash[0, 0] != null && Cash[0, 1] != null)
+                        if (Cells[i, j].transform.GetComponent<TachControler>().isTach == true && !Cells[i, j].transform.GetComponent<TachControler>().oneTach)
                         {
-                            Cash[0, 0] = i;
-                            Cash[0, 1] = j;
+                            Cells[i, j].transform.GetComponent<SpriteRenderer>().color = Color.yellow;
+                            Debug.Log(Cash[0, 0]);
+                            Debug.Log(Cash[0, 1]);
+                            Debug.Log(i);
+                            Debug.Log(j);
+
+                            if (Cash[0, 0] == null && Cash[0, 1] == null)
+                            {
+                                Cash[0, 0] = i;
+                                Cash[0, 1] = j;
+                            }
+                            else
+                            {
+                                Cash[1, 0] = i;
+                                Cash[1, 1] = j;
+                            }
+                            SelectCellCout++;
+                            Cells[i, j].transform.GetComponent<TachControler>().oneTach = true;
                         }
-                        else
+                        else if (!Cells[i, j].transform.GetComponent<TachControler>().oneTach)
                         {
-                            Cash[1, 0] = i;
-                            Cash[1, 1] = j;
+                            Cells[i, j].transform.GetComponent<SpriteRenderer>().color = Color.white;
                         }
                     }
                 }
+                Debug.Log(SelectCellCout);
+                if (SelectCellCout == 2)
+                {
+                    Debug.Log("Зашло");
+                    if (int.Parse(Cells[Cash[0, 0].Value, Cash[0, 1].Value].transform.GetChild(0).GetComponent<TextMeshPro>().text) + int.Parse(Cells[Cash[1, 0].Value, Cash[1, 1].Value].transform.GetChild(0).GetComponent<TextMeshPro>().text) == 10)
+                    {
+                        Object.Destroy(Cells[Cash[0, 0].Value, Cash[0, 1].Value].transform.GetChild(0).GetComponent<TextMeshPro>());
+                        Object.Destroy(Cells[Cash[1, 0].Value, Cash[1, 1].Value].transform.GetChild(0).GetComponent<TextMeshPro>());
+                    }
+                    Cells[Cash[0, 0].Value, Cash[0, 1].Value].transform.GetComponent<SpriteRenderer>().color = Color.white;
+                    Cells[Cash[1, 0].Value, Cash[1, 1].Value].transform.GetComponent<SpriteRenderer>().color = Color.white;
+                    Cash[0, 0] = null;
+                    Cash[0, 1] = null;
+                    Cash[1, 0] = null;
+                    Cash[1, 1] = null;
+                    SelectCellCout = 0;
+                }
+                yield return new WaitForSeconds(0.1f);
             }
         }
     }
