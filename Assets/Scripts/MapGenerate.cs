@@ -145,14 +145,22 @@ namespace MapGenerate
                 Debug.Log(SelectCellCout);
                 if (SelectCellCout == 2)
                 {
+                    yield return new WaitForSeconds(0.3f);
                     Debug.Log("Зашло");
                     if (int.Parse(Cells[Cash[0, 0].Value, Cash[0, 1].Value].transform.GetChild(0).GetComponent<TextMeshPro>().text) + int.Parse(Cells[Cash[1, 0].Value, Cash[1, 1].Value].transform.GetChild(0).GetComponent<TextMeshPro>().text) == 10)
                     {
                         Object.Destroy(Cells[Cash[0, 0].Value, Cash[0, 1].Value].transform.GetChild(0).GetComponent<TextMeshPro>());
                         Object.Destroy(Cells[Cash[1, 0].Value, Cash[1, 1].Value].transform.GetChild(0).GetComponent<TextMeshPro>());
                     }
+                    TachControler cellOne = Cells[Cash[0, 0].Value, Cash[0, 1].Value].transform.GetComponent<TachControler>();
+                    TachControler cellTwo = Cells[Cash[1, 0].Value, Cash[1, 1].Value].transform.GetComponent<TachControler>();
+
                     Cells[Cash[0, 0].Value, Cash[0, 1].Value].transform.GetComponent<SpriteRenderer>().color = Color.white;
                     Cells[Cash[1, 0].Value, Cash[1, 1].Value].transform.GetComponent<SpriteRenderer>().color = Color.white;
+                    cellOne.isTach = false;
+                    cellOne.oneTach = false;
+                    cellTwo.isTach = false;
+                    cellTwo.oneTach = false;
                     Cash[0, 0] = null;
                     Cash[0, 1] = null;
                     Cash[1, 0] = null;
