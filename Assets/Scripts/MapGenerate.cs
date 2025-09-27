@@ -12,6 +12,7 @@ namespace MapGenerate
         private void Start() => gObject = gameObject;
         public void Gener(int WH)
         {
+            if (gener != null) { gener = null;}
             gener = new Generate(WH, mat, gObject);
             gener.GenerateMap();
             StartCoroutine(gener.TachCell());
