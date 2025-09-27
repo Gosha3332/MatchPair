@@ -1,8 +1,6 @@
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using static MapGenerate.Generate;
 
 namespace MapGenerate
 {
@@ -10,10 +8,11 @@ namespace MapGenerate
     {
         [SerializeField] private Sprite mat;
         private GameObject gObject;
+        private Generate gener;
+        private void Start() => gObject = gameObject;
         public void Gener(int WH)
         {
-            gObject = gameObject;
-            Generate gener = new Generate(WH, mat, gObject);
+            gener = new Generate(WH, mat, gObject);
             gener.GenerateMap();
             StartCoroutine(gener.TachCell());
         }
